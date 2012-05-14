@@ -1,4 +1,6 @@
-import bsddb
+from ZODB.FileStorage import FileStorage
+from ZODB.DB import DB
+import transaction
 
 
 class TestBackend:
@@ -8,10 +10,17 @@ class TestBackend:
     self.mode = mode
 
     if mode == "w":
-      self.test_db_items = bsddb.btopen(filename, 'n')
+      self.storage = FileStorage(filename)
+      db = DB(self.storage)
+      connection = db.open()
+      self.test_db_items = connection.root()
 
     elif mode == "r":
-      self.test_db_items = bsddb.btopen(filename, mode)
+      self.storage = FileStorage(filename)
+      db = DB(self.storage)
+      connection = db.open()
+      self.test_db_items = connection.root()
+
       self.next_rec_num = 0   # Initialise next record counter
       self.num_records = len(self.test_db_items)
 
@@ -41,9 +50,8 @@ class TestBackend:
       yield value
 
   def close(self):
-
-    if self.mode == "w":
-      self.test_db_items.close()
+    transaction.commit()
+    self.storage.close()
 
   def getTestDBItems(self):
     return self.test_db_items.values()

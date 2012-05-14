@@ -62,3 +62,5 @@ class TestBackend:
     if self.mode == "w":
       self.h5file.close()
 
+  def getTestDBItems(self):
+    return self.test_db_items 
