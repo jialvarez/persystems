@@ -51,7 +51,7 @@ class Test:
       else:
         memvar = item
 
-    #Another way to read records
+    #Another way to read records, unimplemented by now
     #for (key, value) in test_db.iteritems():
     #  memvar = value
     #  i += 1
@@ -64,6 +64,7 @@ class Test:
 
 
 def getCSVReader():
+
   # CSV dialect where lines end in "\n"
   csv.register_dialect('endline', lineterminator='\n')
   csv_reader = csv.reader(open(FILENAME,'r'), delimiter=',')
@@ -71,5 +72,7 @@ def getCSVReader():
 
 # test experiment
 tester = Test(getCSVReader(), "pytables")
-#tester = Test(getCSVReader(), "pybsddb")
+tester = Test(getCSVReader(), "pybsddb")
 tester = Test(getCSVReader(), "pyzodb")
+tester = Test(getCSVReader(), "pydurus")
+tester = Test(getCSVReader(), "pyredis")
